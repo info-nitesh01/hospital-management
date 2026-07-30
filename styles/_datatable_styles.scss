@@ -1,0 +1,424 @@
+// DataTable Styles
+// Sticky header and scrollable table implementation
+
+.data-table-wrapper {
+  width: 100%;
+
+  // Filter bar styles
+  .filter-bar {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+    padding: 0.625rem;
+    background-color: var(--muted) / 0.3;
+    border-radius: 0.375rem;
+    border: 1px solid var(--border) / 0.5;
+
+    @media (min-width: 640px) {
+      flex-direction: row;
+      align-items: center;
+    }
+
+    .filter-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+
+      @media (min-width: 640px) {
+        flex-direction: row;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .filter-count {
+        font-size: 0.875rem;
+        font-weight: 500;
+        white-space: nowrap;
+      }
+
+      .filter-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+
+        .filter-tag {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.25rem;
+          padding: 0.25rem 0.5rem;
+          background-color: var(--background) / 0.7;
+          border-radius: 0.375rem;
+          font-size: 0.75rem;
+          border: 1px solid var(--border) / 0.5;
+
+          .filter-name {
+            font-weight: 500;
+            text-transform: capitalize;
+          }
+
+          .filter-count {
+            color: var(--muted-foreground);
+          }
+        }
+      }
+    }
+
+    .clear-filters-btn {
+      align-self: flex-end;
+      height: 2rem;
+      font-size: 0.75rem;
+      background-color: color-mix(in srgb, var(--destructive) 10%, transparent);
+      color: var(--destructive);
+
+      @media (min-width: 640px) {
+        align-self: auto;
+      }
+    }
+  }
+
+  // Table container with scrollbar
+  .table-container {
+    position: relative;
+    border-radius: 0.375rem;
+    border: 2px solid var(--border);
+    background-color: var(--background);
+    max-height: 500px;
+    overflow: auto;
+    overflow-y: auto;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+
+    // Custom scrollbar styles
+    &::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: color-mix(in srgb, var(--muted) 50%, transparent);
+      border-radius: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: color-mix(in srgb, var(--muted-foreground) 30%, transparent);
+      border-radius: 4px;
+
+      &:hover {
+        background: color-mix(in srgb, var(--muted-foreground) 50%, transparent);
+      }
+    }
+
+    // Firefox scrollbar
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in srgb, var(--muted-foreground) 30%, transparent) color-mix(in srgb, var(--muted) 50%, transparent);
+
+    // Table styles
+    table {
+      position: relative;
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+
+      thead {
+        // Sticky header styles
+        tr {
+          border-bottom: 1px solid var(--border);
+
+          &:hover {
+            background-color: transparent;
+          }
+        }
+
+        th {
+          position: sticky;
+          top: 0;
+          z-index: 10;
+          background-color: var(--primary);
+          color: var(--primary-foreground);
+          border-bottom: 1px solid var(--border);
+
+          // Sticky select column (checkbox)
+          &.sticky-select {
+            position: sticky;
+            left: 0;
+            z-index: 20;
+            background-color: var(--primary) !important;
+            color: var(--primary-foreground) !important;
+            box-shadow: 2px 0 4px -2px rgba(0, 0, 0, 0.1);
+          }
+
+          // Sticky pinned column
+          &.sticky-pinned {
+            position: sticky;
+            left: 32px; // Width of select column
+            z-index: 20;
+            background-color: var(--primary);
+          }
+
+          // Sticky actions column
+          &.sticky-actions {
+            position: sticky;
+            right: 0;
+            z-index: 20;
+            box-shadow: -2px 0 4px -2px rgba(0, 0, 0, 0.1);
+            background-color: var(--primary) !important;
+            color: var(--primary-foreground) !important;
+          }
+
+          // Sort button styles
+          .sort-button {
+            height: auto;
+            padding: 0;
+            font-weight: 500;
+            background: transparent;
+            color: var(--primary-foreground);
+
+            &:hover {
+              background-color: transparent;
+              color: var(--primary-foreground);
+            }
+          }
+        }
+      }
+
+      tbody {
+        tr {
+          &[data-state="selected"] {
+            background-color: var(--accent);
+          }
+
+          td {
+            // Text overflow handling
+            max-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+
+            // Sticky select column in body
+            &.sticky-select {
+              position: sticky;
+              left: 0;
+              background-color: #ffffff !important;
+              box-shadow: 2px 0 4px -2px rgba(0, 0, 0, 0.1);
+              z-index: 10;
+            }
+
+            // Sticky pinned column in body
+            &.sticky-pinned {
+              position: sticky;
+              left: 32px; // Width of select column
+              background-color: var(--background);
+              z-index: 10;
+            }
+
+            // Sticky actions column in body
+            &.sticky-actions {
+              position: sticky;
+              right: 0;
+              background-color: #ffffff !important;
+              box-shadow: -2px 0 4px -2px rgba(0, 0, 0, 0.1);
+              z-index: 10;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // Pagination styles
+  .pagination-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem 0;
+
+    @media (min-width: 996px) {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .pagination-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      font-size: 0.875rem;
+      color: var(--muted-foreground);
+
+      @media (min-width: 640px) {
+        flex-direction: row;
+        align-items: center;
+      }
+
+      .row-selection-info {
+        // Row selection text
+      }
+
+      .export-info {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+
+        @media (min-width: 640px) {
+          margin-left: 1rem;
+        }
+
+        .export-icon {
+          width: 0.75rem;
+          height: 0.75rem;
+        }
+
+        .export-text {
+          font-weight: 500;
+        }
+      }
+
+      .page-size-selector {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        @media (min-width: 640px) {
+          margin-left: 1rem;
+        }
+
+        .page-size-label {
+          font-size: 0.875rem;
+          font-weight: 500;
+        }
+
+        .page-size-select {
+          height: 2rem;
+          width: 70px;
+        }
+      }
+    }
+
+    .pagination-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+
+      .page-button {
+        height: 2rem;
+        width: 2rem;
+        padding: 0;
+        padding-top: 3px;
+
+        &.page-button-wide {
+          width: 2.75rem;
+        }
+
+        &[disabled] {
+          opacity: 0.5;
+          cursor: not-allowed;
+        }
+
+        &.current-page {
+          pointer-events: none;
+        }
+      }
+
+      .page-numbers {
+        display: none;
+        align-items: center;
+        gap: 0.25rem;
+
+        @media (min-width: 640px) {
+          display: flex;
+        }
+
+        .page-dots {
+          padding: 0 0.5rem;
+          color: var(--muted-foreground);
+        }
+      }
+
+      .page-info {
+        margin-left: 0.5rem;
+        font-size: 0.875rem;
+        color: var(--muted-foreground);
+      }
+    }
+  }
+
+  // Column visibility dropdown customization
+  .column-dropdown {
+    &-trigger {
+      // Trigger button styles
+    }
+
+    &-content {
+      // Dropdown content styles
+    }
+  }
+
+  // Export button states
+  .export-button {
+    &.export-selected {
+      // Styles for when exporting selected rows
+    }
+
+    &.export-filtered {
+      // Styles for when exporting filtered rows
+    }
+  }
+
+  // Responsive utilities
+  .mobile-hide {
+    display: none;
+
+    @media (min-width: 640px) {
+      display: flex;
+    }
+  }
+
+  .mobile-show {
+    display: flex;
+
+    @media (min-width: 640px) {
+      display: none;
+    }
+  }
+}
+
+// Dark mode support
+@media (prefers-color-scheme: dark) {
+  .data-table-wrapper {
+    .table-container {
+      &::-webkit-scrollbar-track {
+        background: var(--muted);
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: color-mix(in srgb, var(--muted-foreground) 40%, transparent);
+
+        &:hover {
+          background: color-mix(in srgb, var(--muted-foreground) 60%, transparent);
+        }
+      }
+
+      // Sticky columns in dark mode
+      table {
+        thead th {
+          &.sticky-select,
+          &.sticky-actions {
+            background-color: var(--background) !important;
+          }
+        }
+
+        tbody td {
+          &.sticky-select,
+          &.sticky-actions {
+            background-color: var(--background) !important;
+          }
+        }
+      }
+    }
+  }
+}
+
+.data-table-wrapper .table-container table thead th.sticky-select, .data-table-wrapper .table-container table thead th.sticky-actions {
+    background-color: var(--primary) !important;
+}

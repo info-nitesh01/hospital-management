@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "shadcn": {
+      "command": "npm",
+      "args": ["run", "mcp"],
+      "env": {}
+    }
+  }
+}

@@ -1,0 +1,17 @@
+// Table header padding-x fix
+th button.has-\[\>svg\]\:px-3:has( > svg){
+  padding: 0;
+}
+
+.data-\[active\=true\]\:text-sidebar-accent-foreground[data-active="true"]{
+  border-color: var(--color-primary-foreground);
+}
+
+.focus-visible\:ring-\[3px\]:focus-visible{
+  --tw-ring-shadow:none;
+  box-shadow:none
+}
+
+.overflow-y-auto {
+    scrollbar-width: thin;
+}

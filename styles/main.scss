@@ -1,0 +1,25 @@
+// Main SCSS File - Import all partials
+@use 'variables' as *;
+@use 'mixins' as *;
+@use 'datatable_styles' as *;
+@use 'theme_customizer' as *;
+@use 'toast_styles' as *;
+@use 'component_styles' as *;
+@use 'custom_loader' as *;
+
+.main-bg{
+  background-color: $main-background;
+}
+
+// Dark mode background
+html.dark .main-bg {
+  background-color: #262626;
+}
+
+.ellipsis-1 {
+  @include line-clamp(1);
+}
+
+.go1754112896 {
+    right: 80px !important;
+}

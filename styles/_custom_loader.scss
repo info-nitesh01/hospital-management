@@ -1,0 +1,27 @@
+.custom-loader {
+  width: 32px;
+  aspect-ratio: 1;
+  display: grid;
+  border-radius: 50%;
+  background:
+    linear-gradient(0deg, currentColor 30%, #0000 0 70%, currentColor 0) 50%/8% 100%,
+    linear-gradient(90deg, color-mix(in srgb, currentColor 25%, transparent) 30%, #0000 0 70%, color-mix(in srgb, currentColor 75%, transparent) 0) 50%/100% 8%;
+  background-repeat: no-repeat;
+  animation: l23 1s infinite steps(12);
+}
+.custom-loader::before,
+.custom-loader::after {
+   content: "";
+   grid-area: 1/1;
+   border-radius: 50%;
+   background: inherit;
+   opacity: 0.915;
+   transform: rotate(30deg);
+}
+.custom-loader::after {
+   opacity: 0.83;
+   transform: rotate(60deg);
+}
+@keyframes l23 {
+  100% {transform: rotate(1turn)}
+}

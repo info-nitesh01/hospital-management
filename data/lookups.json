@@ -1,0 +1,314 @@
+{
+  "clientTypes": [
+    {
+      "clientType": "Commercial"
+    },
+    {
+      "clientType": "Residential"
+    },
+    {
+      "clientType": "Industrial"
+    },
+    {
+      "clientType": "Mixed-Use"
+    },
+    {
+      "clientType": "Government"
+    }
+  ],
+  "states": [
+    {
+      "stateCode": "TX"
+    },
+    {
+      "stateCode": "CA"
+    },
+    {
+      "stateCode": "NY"
+    },
+    {
+      "stateCode": "FL"
+    },
+    {
+      "stateCode": "IL"
+    }
+  ],
+  "cities": {
+    "TX": [
+      {
+        "city": "Houston"
+      },
+      {
+        "city": "Dallas"
+      },
+      {
+        "city": "Austin"
+      },
+      {
+        "city": "San Antonio"
+      }
+    ],
+    "CA": [
+      {
+        "city": "Los Angeles"
+      },
+      {
+        "city": "San Francisco"
+      },
+      {
+        "city": "San Diego"
+      }
+    ],
+    "NY": [
+      {
+        "city": "New York"
+      },
+      {
+        "city": "Buffalo"
+      },
+      {
+        "city": "Albany"
+      }
+    ],
+    "FL": [
+      {
+        "city": "Miami"
+      },
+      {
+        "city": "Orlando"
+      },
+      {
+        "city": "Tampa"
+      }
+    ],
+    "IL": [
+      {
+        "city": "Chicago"
+      },
+      {
+        "city": "Springfield"
+      }
+    ]
+  },
+  "counties": {
+    "TX": [
+      {
+        "county": "Harris"
+      },
+      {
+        "county": "Dallas"
+      },
+      {
+        "county": "Travis"
+      },
+      {
+        "county": "Bexar"
+      }
+    ],
+    "CA": [
+      {
+        "county": "Los Angeles"
+      },
+      {
+        "county": "San Francisco"
+      },
+      {
+        "county": "San Diego"
+      }
+    ],
+    "NY": [
+      {
+        "county": "New York"
+      },
+      {
+        "county": "Erie"
+      },
+      {
+        "county": "Albany"
+      }
+    ],
+    "FL": [
+      {
+        "county": "Miami-Dade"
+      },
+      {
+        "county": "Orange"
+      },
+      {
+        "county": "Hillsborough"
+      }
+    ],
+    "IL": [
+      {
+        "county": "Cook"
+      },
+      {
+        "county": "Sangamon"
+      }
+    ]
+  },
+  "zipCodes": [
+    {
+      "zipCode": "77001"
+    },
+    {
+      "zipCode": "77002"
+    },
+    {
+      "zipCode": "75201"
+    },
+    {
+      "zipCode": "78701"
+    },
+    {
+      "zipCode": "78205"
+    },
+    {
+      "zipCode": "90001"
+    },
+    {
+      "zipCode": "94102"
+    },
+    {
+      "zipCode": "92101"
+    },
+    {
+      "zipCode": "10001"
+    },
+    {
+      "zipCode": "14201"
+    },
+    {
+      "zipCode": "33101"
+    },
+    {
+      "zipCode": "32801"
+    },
+    {
+      "zipCode": "33602"
+    },
+    {
+      "zipCode": "60601"
+    },
+    {
+      "zipCode": "60602"
+    }
+  ],
+  "clientManagers": [
+    {
+      "clientManagerId": "mgr-001",
+      "clientManager": "Sarah Johnson"
+    },
+    {
+      "clientManagerId": "mgr-002",
+      "clientManager": "Lisa Wang"
+    },
+    {
+      "clientManagerId": "mgr-003",
+      "clientManager": "Robert Chen"
+    }
+  ],
+  "salesManagers": [
+    {
+      "salesManagerId": "sales-001",
+      "salesManager": "Mike Davis"
+    },
+    {
+      "salesManagerId": "sales-002",
+      "salesManager": "Rachel Green"
+    },
+    {
+      "salesManagerId": "sales-003",
+      "salesManager": "Tom Wilson"
+    }
+  ],
+  "contactTypes": [
+    {
+      "contactType": "Primary"
+    },
+    {
+      "contactType": "Alternate"
+    },
+    {
+      "contactType": "Billing"
+    },
+    {
+      "contactType": "Technical"
+    }
+  ],
+  "billingMethods": [
+    {
+      "billingMethod": "Contingency"
+    },
+    {
+      "billingMethod": "Flat Fee"
+    },
+    {
+      "billingMethod": "Hourly"
+    },
+    {
+      "billingMethod": "Retainer"
+    }
+  ],
+  "accountManagers": [
+    {
+      "userId": "mgr-001",
+      "accountManager": "Sarah Johnson"
+    },
+    {
+      "userId": "mgr-002",
+      "accountManager": "Lisa Wang"
+    },
+    {
+      "userId": "mgr-003",
+      "accountManager": "Robert Chen"
+    }
+  ],
+  "taxRateSources": [
+    {
+      "taxRateSource": "County"
+    },
+    {
+      "taxRateSource": "State"
+    },
+    {
+      "taxRateSource": "Municipality"
+    }
+  ],
+  "taxRateTypes": [
+    {
+      "taxRateType": "Market"
+    },
+    {
+      "taxRateType": "Assessed"
+    },
+    {
+      "taxRateType": "Appraised"
+    }
+  ],
+  "assessments": [
+    {
+      "assessment": "Annual"
+    },
+    {
+      "assessment": "Bi-Annual"
+    },
+    {
+      "assessment": "Quarterly"
+    }
+  ],
+  "feeTypes": [
+    {
+      "feeType": "Filing Fee"
+    },
+    {
+      "feeType": "Processing Fee"
+    },
+    {
+      "feeType": "Research Fee"
+    },
+    {
+      "feeType": "Administrative Fee"
+    }
+  ]
+}
