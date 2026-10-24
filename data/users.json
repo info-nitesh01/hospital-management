@@ -1,9 +1,0 @@
-[
-  {
-    "userId": "mock-user-id-001",
-    "email": "nitesh.s@datagainservices.com",
-    "password": "12345678",
-    "name": "Nitesh S",
-    "role": "Admin"
-  }
-]
