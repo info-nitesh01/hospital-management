@@ -40,10 +40,10 @@ export function DataTableContent<TData, TValue>({
                     <TableHead
                       key={header.id}
                       style={{
-                        ...(header.column.columnDef.meta?.width && {
-                          width: `${header.column.columnDef.meta.width}px`,
-                          minWidth: `${header.column.columnDef.meta.width}px`,
-                          maxWidth: `${header.column.columnDef.meta.width}px`,
+                        ...(header.id === "select" && {
+                          width: "35px",
+                          minWidth: "35px",
+                          maxWidth: "35px",
                         }),
                       }}
                       className={cn(
@@ -78,10 +78,10 @@ export function DataTableContent<TData, TValue>({
                     <TableCell
                       key={cell.id}
                       style={{
-                        ...(cell.column.columnDef.meta?.width && {
-                          width: `${cell.column.columnDef.meta.width}px`,
-                          minWidth: `${cell.column.columnDef.meta.width}px`,
-                          maxWidth: `${cell.column.columnDef.meta.width}px`,
+                        ...(cell.column.id === "select" && {
+                          width: "35px",
+                          minWidth: "35px",
+                          maxWidth: "35px",
                         }),
                       }}
                       className={cn(

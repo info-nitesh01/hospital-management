@@ -62,4 +62,11 @@ export const crossPageCheckboxColumn = <T,>(
   },
   enableSorting: false,
   enableHiding: false,
+  size: 40,
+  minSize: 40,
+  maxSize: 40,
+  meta: {
+    sticky: 'left',
+    width: 40,
+  },
 });
