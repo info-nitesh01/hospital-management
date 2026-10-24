@@ -1,5 +1,6 @@
 import { useAppSelector, useAppDispatch } from "@/store/hooks";
 import {
+  setConfig as setConfigAction,
   setThemeColor as setThemeColorAction,
   setCustomColor as setCustomColorAction,
   setButtonPrimaryColor as setButtonPrimaryColorAction,
@@ -7,7 +8,6 @@ import {
   setThemeMode as setThemeModeAction,
   toggleMode as toggleModeAction,
   setFontSize as setFontSizeAction,
-  resetTheme as resetThemeAction,
 } from "@/store/slices/themeSlice";
 import { ThemeColor } from "@/config/theme-colors";
 import { ThemeMode } from "@/config/theme-config";
@@ -15,6 +15,10 @@ import { ThemeMode } from "@/config/theme-config";
 export function useTheme() {
   const dispatch = useAppDispatch();
   const config = useAppSelector((state) => state.theme.config);
+
+  const setConfig = (nextConfig: typeof config) => {
+    dispatch(setConfigAction(nextConfig));
+  };
 
   const setThemeColor = (color: ThemeColor) => {
     dispatch(setThemeColorAction(color));
@@ -44,12 +48,9 @@ export function useTheme() {
     dispatch(setFontSizeAction(size));
   };
 
-  const resetTheme = () => {
-    dispatch(resetThemeAction());
-  };
-
   return {
     config,
+    setConfig,
     setThemeColor,
     setCustomColor,
     setButtonPrimaryColor,
@@ -57,6 +58,5 @@ export function useTheme() {
     setThemeMode,
     toggleMode,
     setFontSize,
-    resetTheme,
   };
 }

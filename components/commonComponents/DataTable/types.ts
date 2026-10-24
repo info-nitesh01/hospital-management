@@ -58,6 +58,7 @@ export interface DataTableProps<TData, TValue> {
   }>;
   // Toolbar actions (rendered before manage columns button)
   toolbarActions?: React.ReactNode | ((selectedIds: string[]) => React.ReactNode);
+  toolbarSearch?: React.ReactNode;
   // Quick search props
   showQuickSearch?: boolean; // Enable quick search feature
   quickSearchApiUrl?: string; // API URL for quick search

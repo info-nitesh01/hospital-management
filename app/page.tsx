@@ -10,7 +10,10 @@ import { MetricsGrid } from "./dashboard/MetricsGrid";
 import { FloatingFilterButton } from "./dashboard/components/FloatingFilterButton";
 import { DashboardFilterSidebar } from "./dashboard/components/DashboardFilterSidebar";
 import { useAuth } from "@/hooks/useAuth";
-import dashboardData from "@/data/dashboard-data.json";
+import { useQuery } from "@tanstack/react-query";
+import { authApi } from "@/lib/api/global-http";
+import { getErrorMessage } from "@/lib/api/error-utils";
+import { Loader } from "@/components/commonComponents/Loader";
 import {
   type DashboardFilters,
   loadFiltersFromStorage,
@@ -32,6 +35,7 @@ import type {
   AppealSavingChart,
   SavingsByState,
   BppRenderedValue,
+  DashboardData,
 } from "./dashboard/types";
 
 // Constants
@@ -43,6 +47,16 @@ const TAB_CONFIGS: TabConfig[] = [
     component: NoticesAppealsTab,
   },
 ];
+
+const EMPTY_DASHBOARD_DATA: DashboardData = {
+  totalMetrics: [],
+  noticeAndAppealsMetrics: [],
+  totalAccountsData: [],
+  appealsOverview: { detailedOverview: [], simpleOverview: [] },
+  savingsByState: [],
+  bppRenderedValues: [],
+  appealSavingChart: { company: [], state: [], property: [], county: [], assessor: [] },
+};
 
 // Custom hook
 const useTabNavigation = () => {
@@ -61,7 +75,7 @@ const useTabNavigation = () => {
 };
 
 interface TabNavigationProps {
-  dashboardData: typeof dashboardData;
+  dashboardData: DashboardData;
 }
 
 const TabNavigation: React.FC<TabNavigationProps> = ({ dashboardData }) => {
@@ -93,6 +107,18 @@ const TabNavigation: React.FC<TabNavigationProps> = ({ dashboardData }) => {
 // Main component
 export default function DashboardPage() {
   const { userId } = useAuth();
+  const {
+    data: dashboardData,
+    isLoading: isDashboardLoading,
+    error: dashboardError,
+  } = useQuery({
+    queryKey: ["dashboard", "main"],
+    queryFn: async () => {
+      const response = await authApi.getInstance().get<{ content: DashboardData }>("/dashboard");
+      return response.data.content;
+    },
+  });
+  const resolvedDashboardData = dashboardData ?? EMPTY_DASHBOARD_DATA;
   const searchParams = useSearchParams();
   const currentTab = searchParams.get("tab") || "notices-appeals";
   const [isFilterOpen, setIsFilterOpen] = React.useState(false);
@@ -114,18 +140,18 @@ export default function DashboardPage() {
 
   // Extract filter options from data (memoized)
   const filterOptions = React.useMemo(() => ({
-    clients: extractUniqueClients(dashboardData as never),
-    owners: extractUniqueOwners(dashboardData as never),
-    properties: extractUniqueProperties(dashboardData as never),
-    states: extractUniqueStates(dashboardData as never),
-    counties: extractUniqueCounties(dashboardData as never),
-    years: extractUniqueYears(dashboardData as never),
-  }), []);
+    clients: extractUniqueClients(resolvedDashboardData as never),
+    owners: extractUniqueOwners(resolvedDashboardData as never),
+    properties: extractUniqueProperties(resolvedDashboardData as never),
+    states: extractUniqueStates(resolvedDashboardData as never),
+    counties: extractUniqueCounties(resolvedDashboardData as never),
+    years: extractUniqueYears(resolvedDashboardData as never),
+  }), [resolvedDashboardData]);
 
   // Apply filters to data (memoized)
   const filteredData = React.useMemo(() => {
-    return filterDashboardData(dashboardData as never, filters);
-  }, [filters]);
+    return filterDashboardData(resolvedDashboardData as never, filters);
+  }, [filters, resolvedDashboardData]);
 
   // Calculate active filter count
   const activeFilterCount = React.useMemo(() => {
@@ -138,10 +164,28 @@ export default function DashboardPage() {
     saveFiltersToStorage(newFilters, userId || undefined);
   }, [userId]);
 
+  if (isDashboardLoading) {
+    return (
+      <div className="flex min-h-[50vh] items-center justify-center">
+        <Loader size="lg" withText />
+      </div>
+    );
+  }
+
+  if (dashboardError || !dashboardData) {
+    return (
+      <div className="flex min-h-[50vh] items-center justify-center" role="alert">
+        <p className="text-sm text-destructive">
+          Unable to load dashboard data: {dashboardError ? getErrorMessage(dashboardError) : "No dashboard data was returned."}
+        </p>
+      </div>
+    );
+  }
+
   return (
     <>
       <div className="space-y-3 2xl:space-y-4">
-        <MetricsGrid metrics={dashboardData.totalMetrics as Metric[]} />
+        <MetricsGrid metrics={resolvedDashboardData.totalMetrics as Metric[]} />
         <TabNavigation
           dashboardData={filteredData.dashboardData}
         />

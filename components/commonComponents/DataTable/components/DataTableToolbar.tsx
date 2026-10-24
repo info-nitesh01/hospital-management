@@ -32,6 +32,7 @@ interface DataTableToolbarProps<TData> {
   // Active filters props
   activeFilters: ActiveFilter[];
   onClearAllFilters: () => void;
+  toolbarSearch?: React.ReactNode;
   // Column ordering props
   showColumnVisibility?: boolean;
   columnOrder: string[];
@@ -65,6 +66,7 @@ export function DataTableToolbar<TData>({
   onSaveFilter,
   activeFilters,
   onClearAllFilters,
+  toolbarSearch,
   showColumnVisibility = false,
   columnOrder,
   onColumnOrderChange,
@@ -91,6 +93,7 @@ export function DataTableToolbar<TData>({
   return (
     <div className="flex flex-col md:flex-row justify-between gap-2 pb-4">
       <div className="flex flex-col md:flex-row lg:w-1/2 items-center gap-3">
+        {toolbarSearch}
         {showQuickSearch && (
           <QuickSearchBar
             apiUrl={quickSearchApiUrl}

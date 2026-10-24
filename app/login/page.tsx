@@ -80,10 +80,10 @@ export default function LoginPage() {
         <div className="relative z-10">
           <div className="flex items-center gap-3 mb-8">
             <div className="w-12 h-12 bg-white rounded-lg flex items-center justify-center">
-              <Image src="/logo.png" alt="Client Portal Logo" width={45} height={45} />
+              <Image src="/logo.png" alt="Docu Logo" width={45} height={45} />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-white">Client Portal</h1>
+              <h1 className="text-2xl font-bold text-white">Docu</h1>
               <p className="text-blue-100 text-sm">Datagain Services</p>
             </div>
           </div>
@@ -104,10 +104,10 @@ export default function LoginPage() {
         <div className="w-full max-w-md">
           <div className="lg:hidden flex items-center gap-3 mb-8">
             <div className="w-10 h-10 flex items-center justify-center">
-              <Image src="/logo.png" alt="Client Portal Logo" width={45} height={45} />
+              <Image src="/logo.png" alt="Docu Logo" width={45} height={45} />
             </div>
             <div>
-              <h1 className="text-xl font-bold">Client Portal</h1>
+              <h1 className="text-xl font-bold">Docu</h1>
               <p className="text-sm text-muted-foreground">Datagain Services</p>
             </div>
           </div>
@@ -218,6 +218,38 @@ export default function LoginPage() {
                 </Button>
               </div>
             </form>
+
+            {process.env.NODE_ENV === "development" && (
+              <div className="mt-6 border-t pt-4">
+                <p className="text-sm font-medium">Demo accounts</p>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  Shared temporary password: <span className="font-mono">12345678</span>
+                </p>
+                <div className="mt-3 grid gap-2 sm:grid-cols-2">
+                  {[
+                    { name: "Ankit Rajpoot", email: "ankit@gmail.com", role: "Doctor" },
+                    { name: "Rahul Baghle", email: "rahul@gmail.com", role: "Staff" },
+                  ].map((account) => (
+                    <button
+                      key={account.email}
+                      type="button"
+                      className="flex items-center justify-between gap-2 rounded-md border px-3 py-2 text-left hover:bg-muted"
+                      onClick={() => {
+                        setEmail(account.email);
+                        setPassword("12345678");
+                        setErrors({});
+                      }}
+                    >
+                      <span>
+                        <span className="block text-sm font-medium">{account.name}</span>
+                        <span className="block text-xs text-muted-foreground">{account.role}</span>
+                      </span>
+                      <span className="text-xs text-primary">Use</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
           </Card>
 
           <div className="mt-6 text-center text-sm text-muted-foreground">

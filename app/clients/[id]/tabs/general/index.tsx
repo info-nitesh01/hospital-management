@@ -9,7 +9,6 @@ import {
   HiOutlineCalendar,
   HiOutlinePencil,
   HiOutlineMapPin,
-  HiOutlinePlus,
 } from "react-icons/hi2";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -39,8 +38,6 @@ import type { ApiError } from "@/lib/api/global-types";
 import { CardSkeleton } from "@/components/commonComponents/SkeletonLoader";
 import { Skeleton } from "@/components/ui/skeleton";
 import { FmvChartCard } from "./FmvChartCard";
-import { ClientBillingCard } from "./ClientBillingCard";
-import { ClientBillingModal } from "../../ClientBillingModal";
 import { ClientModal } from "../../../tabs/clients/ClientModal";
 
 interface GeneralInfoTabProps {
@@ -49,7 +46,6 @@ interface GeneralInfoTabProps {
 
 export function GeneralInfoTab({ clientId }: GeneralInfoTabProps) {
   const [isEditModalOpen, setIsEditModalOpen] = React.useState(false);
-  const [isBillingModalOpen, setIsBillingModalOpen] = React.useState(false);
   const [selectedTaxYear, setSelectedTaxYear] = React.useState("2024");
 
   const {
@@ -106,18 +102,6 @@ export function GeneralInfoTab({ clientId }: GeneralInfoTabProps) {
     );
   }
 
-  // Check if billing data exists for the "Add Client Billing" button
-  const hasBillingData = !!(
-    (client.billingMethod && client.billingMethod.trim()) ||
-    (client.contingency && client.contingency.trim()) ||
-    (client.contingencyPercentage !== null && client.contingencyPercentage !== undefined && client.contingencyPercentage !== 0) ||
-    (client.additionalFees && client.additionalFees.length > 0) ||
-    (client.discount !== null && client.discount !== undefined && client.discount !== 0) ||
-    (client.maximumCap !== null && client.maximumCap !== undefined && client.maximumCap !== 0) ||
-    (client.minimumBilling !== null && client.minimumBilling !== undefined && client.minimumBilling !== 0) ||
-    (client.billingClientNotes && client.billingClientNotes.trim()) ||
-    (client.billingManagerName && client.billingManagerName.trim())
-  );
   const getStatusVariant = (
     status: string
   ): "success" | "warning" | "outline" | "destructive" => {
@@ -133,17 +117,6 @@ export function GeneralInfoTab({ clientId }: GeneralInfoTabProps) {
     <div className="space-y-4">
       <div className="flex items-center justify-end">
         <div className="flex gap-2">
-          {!hasBillingData && (
-            <Button
-              icon={<HiOutlinePlus className="h-3 w-3" />}
-              iconPosition="left"
-              onClick={() => setIsBillingModalOpen(true)}
-              variant="outline"
-              size="sm"
-            >
-              Add Client Billing
-            </Button>
-          )}
           <Button
             icon={<HiOutlinePencil className="h-3 w-3 textxs" />}
             size="sm"
@@ -472,19 +445,6 @@ export function GeneralInfoTab({ clientId }: GeneralInfoTabProps) {
 
         <FmvChartCard clientId={client.clientId} />
       </div>
-
-      <ClientBillingCard
-        client={client}
-        isModalOpen={isBillingModalOpen}
-        setIsModalOpen={setIsBillingModalOpen}
-      />
-
-      {/* Modals for edit and billing */}
-      <ClientBillingModal
-        open={isBillingModalOpen}
-        onOpenChange={setIsBillingModalOpen}
-        clientId={client.clientId}
-      />
 
       <ClientModal
         open={isEditModalOpen}

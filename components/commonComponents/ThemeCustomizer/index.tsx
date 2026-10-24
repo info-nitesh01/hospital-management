@@ -1,27 +1,54 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useTheme } from '@/hooks/useTheme';
 import { useSidebar } from '@/components/ui/sidebar';
 import { getAvailableColors, ThemeColor } from '@/config/theme-colors';
 import { HiOutlineCog6Tooth, HiOutlineXMark, HiOutlinePaintBrush, HiOutlineMoon, HiOutlineSun, HiOutlineViewColumns, HiOutlineBars3BottomLeft, HiOutlineBars3, HiOutlineArrowPath, HiOutlineBeaker, HiOutlineAdjustmentsHorizontal } from 'react-icons/hi2';
 import { toast } from 'sonner';
+import { authApi } from '@/lib/api/global-http';
+import { defaultThemeConfig, type ThemeConfig } from '@/config/theme-config';
 
 export function ThemeCustomizer() {
   const [isOpen, setIsOpen] = useState(false);
-  const { config, setThemeColor, setCustomColor, setButtonPrimaryColor, setCustomButtonColor, setThemeMode, setFontSize, resetTheme } = useTheme();
+  const { config, setConfig } = useTheme();
+  const [draft, setDraft] = useState<ThemeConfig>(config);
+  const [isSaving, setIsSaving] = useState(false);
   const { state: sidebarState, setOpen: setSidebarOpen } = useSidebar();
   const colorPickerRef = useRef<HTMLInputElement>(null);
   const buttonColorPickerRef = useRef<HTMLInputElement>(null);
 
+  useEffect(() => {
+    if (isOpen) setDraft(config);
+  }, [config, isOpen]);
+
+  const hasChanges = JSON.stringify(draft) !== JSON.stringify(config);
+
+  const handleApply = async () => {
+    if (!hasChanges || isSaving) return;
+
+    setIsSaving(true);
+    try {
+      const response = await authApi.getInstance().put<{ content: ThemeConfig }>("/theme", { config: draft });
+      setConfig(response.data.content);
+      toast.success('Theme applied and saved');
+      setIsOpen(false);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Unable to save theme settings';
+      toast.error(message);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   const availableColors = getAvailableColors();
 
   const handleCustomColorChange = (color: string) => {
-    setCustomColor(color);
+    setDraft((current) => ({ ...current, customColor: color }));
   };
 
   const handleCustomButtonColorChange = (color: string) => {
-    setCustomButtonColor(color);
+    setDraft((current) => ({ ...current, customButtonColor: color }));
   };
 
   const colorDisplayNames: Record<ThemeColor, string> = {
@@ -88,8 +115,8 @@ export function ThemeCustomizer() {
               {availableColors.map((color) => (
                 <button
                   key={color}
-                  onClick={() => setThemeColor(color)}
-                  className={`color-option ${config.primaryColor === color && !config.customColor ? 'active' : ''}`}
+                  onClick={() => setDraft((current) => ({ ...current, primaryColor: color, customColor: undefined }))}
+                  className={`color-option ${draft.primaryColor === color && !draft.customColor ? 'active' : ''}`}
                   title={colorDisplayNames[color]}
                 >
                   <div
@@ -111,21 +138,21 @@ export function ThemeCustomizer() {
                 <div
                   className="color-circle"
                   style={{
-                    backgroundColor: config.customColor || '#666',
-                    border: config.customColor ? 'none' : '2px dashed var(--border)'
+                    backgroundColor: draft.customColor || '#666',
+                    border: draft.customColor ? 'none' : '2px dashed var(--border)'
                   }}
                 >
-                  {!config.customColor && <HiOutlineBeaker className="w-5 h-5 text-white" />}
+                  {!draft.customColor && <HiOutlineBeaker className="w-5 h-5 text-white" />}
                 </div>
                 {/* <span className="color-name">Custom</span> */}
-                {config.customColor && (
+                {draft.customColor && (
                   <div className="check-mark">✓</div>
                 )}
               </button>
               <input
                 ref={colorPickerRef}
                 type="color"
-                value={config.customColor || '#008dff'}
+                value={draft.customColor || '#008dff'}
                 onChange={(e) => handleCustomColorChange(e.target.value)}
                 className="hidden-color-input"
                 aria-label="Custom color picker"
@@ -143,8 +170,8 @@ export function ThemeCustomizer() {
               {availableColors.map((color) => (
                 <button
                   key={color}
-                  onClick={() => setButtonPrimaryColor(color)}
-                  className={`color-option ${config.buttonPrimaryColor === color && !config.customButtonColor ? 'active' : ''}`}
+                  onClick={() => setDraft((current) => ({ ...current, buttonPrimaryColor: color, customButtonColor: undefined }))}
+                  className={`color-option ${draft.buttonPrimaryColor === color && !draft.customButtonColor ? 'active' : ''}`}
                   title={colorDisplayNames[color]}
                 >
                   <div
@@ -165,20 +192,20 @@ export function ThemeCustomizer() {
                 <div
                   className="color-circle"
                   style={{
-                    backgroundColor: config.customButtonColor || '#666',
-                    border: config.customButtonColor ? 'none' : '2px dashed var(--border)'
+                    backgroundColor: draft.customButtonColor || '#666',
+                    border: draft.customButtonColor ? 'none' : '2px dashed var(--border)'
                   }}
                 >
-                  {!config.customButtonColor && <HiOutlineBeaker className="w-5 h-5 text-white" />}
+                  {!draft.customButtonColor && <HiOutlineBeaker className="w-5 h-5 text-white" />}
                 </div>
-                {config.customButtonColor && (
+                {draft.customButtonColor && (
                   <div className="check-mark">✓</div>
                 )}
               </button>
               <input
                 ref={buttonColorPickerRef}
                 type="color"
-                value={config.customButtonColor || '#008dff'}
+                value={draft.customButtonColor || '#008dff'}
                 onChange={(e) => handleCustomButtonColorChange(e.target.value)}
                 className="hidden-color-input"
                 aria-label="Custom button color picker"
@@ -189,7 +216,7 @@ export function ThemeCustomizer() {
           {/* Mode (Light/Dark) */}
           <div className="theme-section">
             <div className="section-header">
-              {config.mode === 'light' ? (
+              {draft.mode === 'light' ? (
                 <HiOutlineSun className="w-4 h-4" />
               ) : (
                 <HiOutlineMoon className="w-4 h-4" />
@@ -198,15 +225,15 @@ export function ThemeCustomizer() {
             </div>
             <div className="option-grid">
               <button
-                onClick={() => setThemeMode('light')}
-                className={`option-button ${config.mode === 'light' ? 'active' : ''}`}
+                onClick={() => setDraft((current) => ({ ...current, mode: 'light' }))}
+                className={`option-button ${draft.mode === 'light' ? 'active' : ''}`}
               >
                 <HiOutlineSun className="w-4 h-4" />
                 <span>Light</span>
               </button>
               <button
-                onClick={() => setThemeMode('dark')}
-                className={`option-button ${config.mode === 'dark' ? 'active' : ''}`}
+                onClick={() => setDraft((current) => ({ ...current, mode: 'dark' }))}
+                className={`option-button ${draft.mode === 'dark' ? 'active' : ''}`}
               >
                 <HiOutlineMoon className="w-4 h-4" />
                 <span>Dark</span>
@@ -256,8 +283,8 @@ export function ThemeCustomizer() {
                   min="0.8"
                   max="1.3"
                   step="0.05"
-                  value={config.fontSize || 1}
-                  onChange={(e) => setFontSize(parseFloat(e.target.value))}
+                  value={draft.fontSize || 1}
+                  onChange={(e) => setDraft((current) => ({ ...current, fontSize: parseFloat(e.target.value) }))}
                   className="font-size-slider"
                   aria-label="Adjust font size"
                 />
@@ -275,33 +302,43 @@ export function ThemeCustomizer() {
             </div>
           </div>
 
-          {/* Reset Button */}
-          <div className="theme-section">
-            <button
-              onClick={() => {
-                toast.warning("Reset theme to default?", {
-                  description: "All customizations will be lost",
-                  action: {
-                    label: "Reset",
-                    onClick: () => {
-                      resetTheme();
-                      toast.success("Theme reset successfully", {
-                        description: "All settings restored to default",
-                      });
-                    },
+        </div>
+
+        <div className="theme-customizer-footer">
+          <button
+            type="button"
+            className="reset-button"
+            disabled={isSaving}
+            onClick={() => {
+              toast.warning("Reset theme to default?", {
+                description: "Default settings will be staged until you apply them.",
+                action: {
+                  label: "Reset",
+                  onClick: () => {
+                    setDraft(defaultThemeConfig);
+                    toast.success("Default theme staged", {
+                      description: "Click Apply to save these settings",
+                    });
                   },
-                  cancel: {
-                    label: "Cancel",
-                    onClick: () => {},
-                  },
-                });
-              }}
-              className="reset-button"
-            >
-              <HiOutlineArrowPath className="w-4 h-4" />
-              <span>Reset to Default</span>
-            </button>
-          </div>
+                },
+                cancel: {
+                  label: "Cancel",
+                  onClick: () => {},
+                },
+              });
+            }}
+          >
+            <HiOutlineArrowPath className="w-4 h-4" />
+            <span>Reset to Default</span>
+          </button>
+          <button
+            type="button"
+            className="apply-button"
+            onClick={handleApply}
+            disabled={!hasChanges || isSaving}
+          >
+            {isSaving ? 'Applying...' : 'Apply'}
+          </button>
         </div>
       </div>
     </>

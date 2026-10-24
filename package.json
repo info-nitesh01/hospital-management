@@ -1,5 +1,5 @@
 {
-  "name": "shadcn-client-portal",
+  "name": "docu",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -7,8 +7,7 @@
     "build": "next build --turbopack",
     "start": "next start",
     "lint": "eslint",
-    "mcp": "tsx mcp-server/index.ts",
-    "mock-api": "node data/server.js"
+    "mcp": "tsx mcp-server/index.ts"
   },
   "dependencies": {
     "@amcharts/amcharts5": "^5.14.4",

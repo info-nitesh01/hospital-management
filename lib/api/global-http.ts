@@ -14,13 +14,13 @@ import type { ApiResponse, ApiError } from "./global-types";
 // Global Error Handler
 // ============================================================================
 
-export function handleApiError(error: AxiosError): ApiError {
+export function handleApiError(error: AxiosError, redirectOnUnauthorized = true): ApiError {
   if (error.response) {
     const { status, data } = error.response;
     const errorData = data as Record<string, unknown>;
 
     // Handle 401 Unauthorized
-    if (status === 401) {
+    if (status === 401 && redirectOnUnauthorized) {
       clearTokens();
       if (typeof window !== "undefined") {
         window.location.href = "/login";
@@ -85,9 +85,15 @@ export class HttpClient {
       (response) => response,
       async (error: AxiosError) => {
         const originalRequest = error.config as AxiosRequestConfig & { _retry?: boolean };
+        const isLoginRequest = originalRequest.url?.includes("/Account/login") ?? false;
 
         // Handle token refresh for 401 errors
-        if (error.response?.status === 401 && !originalRequest._retry && getRefreshToken()) {
+        if (
+          error.response?.status === 401 &&
+          !isLoginRequest &&
+          !originalRequest._retry &&
+          getRefreshToken()
+        ) {
           if (this.isRefreshing) {
             return new Promise((resolve) => {
               this.refreshSubscribers.push((token: string) => {
@@ -130,7 +136,7 @@ export class HttpClient {
           }
         }
 
-        const apiError = handleApiError(error);
+        const apiError = handleApiError(error, !isLoginRequest);
         return Promise.reject(apiError);
       }
     );

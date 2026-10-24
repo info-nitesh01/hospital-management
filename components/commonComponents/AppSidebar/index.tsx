@@ -5,6 +5,7 @@ import {
   HiOutlineArrowRightOnRectangle,
   HiOutlineChevronUp,
   HiOutlineUser,
+  HiOutlineUserGroup,
 } from "react-icons/hi2";
 import { useAuth } from "@/hooks/useAuth";
 import { useLogout } from "@/hooks/api";
@@ -73,6 +74,11 @@ const navigationItems: NavigationGroup[] = [
         url: "/clients",
         icon: UsersIcon,
       },
+      {
+        title: "Users",
+        url: "/users",
+        icon: HiOutlineUserGroup,
+      },
     ],
   },
 ];
@@ -83,11 +89,15 @@ interface AppSidebarProps {
 
 export function AppSidebar({ className }: AppSidebarProps) {
   const pathname = usePathname();
-  const { userId } = useAuth();
+  const { userId, userRoles } = useAuth();
   const { mutate: logout, isPending: isLoggingOut } = useLogout();
+  const visibleNavigationItems = navigationItems.map((group) => ({
+    ...group,
+    items: group.items.filter((item) => item.title !== "Users" || userRoles.includes("Admin")),
+  }));
 
   const getInitialOpenSubmenu = () => {
-    for (const group of navigationItems) {
+    for (const group of visibleNavigationItems) {
       for (const item of group.items) {
         if (item.subItems) {
           const hasActiveSubItem = item.subItems.some(
@@ -135,7 +145,7 @@ export function AppSidebar({ className }: AppSidebarProps) {
               <Link href="/">
                 <Image src="/logo.png" alt="logo" width={45} height={45} />
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">Client Portal</span>
+                  <span className="truncate font-semibold">Docu</span>
                   <span className="truncate text-xs text-muted-foreground">
                     v1.0.0
                   </span>
@@ -147,7 +157,7 @@ export function AppSidebar({ className }: AppSidebarProps) {
       </SidebarHeader>
 
       <SidebarContent>
-        {navigationItems.map((group) => (
+        {visibleNavigationItems.map((group) => (
           <SidebarGroup key={group.title}>
             <SidebarGroupLabel>{group.title}</SidebarGroupLabel>
             <SidebarGroupContent>

@@ -3,7 +3,6 @@ import {
   ThemeConfig,
   ThemeMode,
   defaultThemeConfig,
-  THEME_STORAGE_KEY,
 } from "@/config/theme-config";
 import { ThemeColor } from "@/config/theme-colors";
 
@@ -26,82 +25,33 @@ const themeSlice = createSlice({
     },
     setConfig: (state, action: PayloadAction<ThemeConfig>) => {
       state.config = action.payload;
-      // Save to localStorage
-      if (typeof window !== "undefined") {
-        localStorage.setItem(THEME_STORAGE_KEY, JSON.stringify(action.payload));
-      }
+    },
+    hydrateTheme: (state, action: PayloadAction<ThemeConfig>) => {
+      state.config = action.payload;
+      state.mounted = true;
     },
     setThemeColor: (state, action: PayloadAction<ThemeColor>) => {
       state.config.primaryColor = action.payload;
       state.config.customColor = undefined;
-      // Save to localStorage
-      if (typeof window !== "undefined") {
-        localStorage.setItem(THEME_STORAGE_KEY, JSON.stringify(state.config));
-      }
     },
     setCustomColor: (state, action: PayloadAction<string>) => {
       state.config.customColor = action.payload;
-      // Save to localStorage
-      if (typeof window !== "undefined") {
-        localStorage.setItem(THEME_STORAGE_KEY, JSON.stringify(state.config));
-      }
     },
     setButtonPrimaryColor: (state, action: PayloadAction<ThemeColor>) => {
       state.config.buttonPrimaryColor = action.payload;
       state.config.customButtonColor = undefined;
-      // Save to localStorage
-      if (typeof window !== "undefined") {
-        localStorage.setItem(THEME_STORAGE_KEY, JSON.stringify(state.config));
-      }
     },
     setCustomButtonColor: (state, action: PayloadAction<string>) => {
       state.config.customButtonColor = action.payload;
-      // Save to localStorage
-      if (typeof window !== "undefined") {
-        localStorage.setItem(THEME_STORAGE_KEY, JSON.stringify(state.config));
-      }
     },
     setThemeMode: (state, action: PayloadAction<ThemeMode>) => {
       state.config.mode = action.payload;
-      // Save to localStorage
-      if (typeof window !== "undefined") {
-        localStorage.setItem(THEME_STORAGE_KEY, JSON.stringify(state.config));
-      }
     },
     toggleMode: (state) => {
       state.config.mode = state.config.mode === "light" ? "dark" : "light";
-      // Save to localStorage
-      if (typeof window !== "undefined") {
-        localStorage.setItem(THEME_STORAGE_KEY, JSON.stringify(state.config));
-      }
     },
     setFontSize: (state, action: PayloadAction<number>) => {
       state.config.fontSize = action.payload;
-      // Save to localStorage
-      if (typeof window !== "undefined") {
-        localStorage.setItem(THEME_STORAGE_KEY, JSON.stringify(state.config));
-      }
-    },
-    resetTheme: (state) => {
-      state.config = defaultThemeConfig;
-      // Save to localStorage
-      if (typeof window !== "undefined") {
-        localStorage.setItem(THEME_STORAGE_KEY, JSON.stringify(defaultThemeConfig));
-      }
-    },
-    loadThemeFromStorage: (state) => {
-      if (typeof window !== "undefined") {
-        const savedTheme = localStorage.getItem(THEME_STORAGE_KEY);
-        if (savedTheme) {
-          try {
-            const parsed = JSON.parse(savedTheme) as ThemeConfig;
-            state.config = parsed;
-          } catch (error) {
-            console.error("Failed to parse saved theme:", error);
-          }
-        }
-        state.mounted = true;
-      }
     },
   },
 });
@@ -109,6 +59,7 @@ const themeSlice = createSlice({
 export const {
   setMounted,
   setConfig,
+  hydrateTheme,
   setThemeColor,
   setCustomColor,
   setButtonPrimaryColor,
@@ -116,8 +67,6 @@ export const {
   setThemeMode,
   toggleMode,
   setFontSize,
-  resetTheme,
-  loadThemeFromStorage,
 } = themeSlice.actions;
 
 export default themeSlice.reducer;

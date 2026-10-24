@@ -32,6 +32,9 @@ export function getErrorMessage(error: unknown): string {
   // Handle ApiError type
   if (error && typeof error === "object" && "message" in error) {
     const apiError = error as ApiError;
+    if (apiError.status === 401 && apiError.message) {
+      return apiError.message;
+    }
     if (apiError.status && ERROR_MESSAGES[apiError.status]) {
       return ERROR_MESSAGES[apiError.status];
     }

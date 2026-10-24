@@ -32,7 +32,7 @@ interface ColumnTypeMap {
 
 const DEFAULT_TYPE_MAP: ColumnTypeMap = {
   status: ["clientStatus"],
-  date: ["createdOn", "modifiedOn"],
+  date: ["createdOn", "modifiedOn", "createdAt"],
   number: ["noOfAccounts"],
   email: ["contactEmail"],
   phone: [],

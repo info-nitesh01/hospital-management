@@ -15,8 +15,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Client Portal",
-  description: "Professional client management portal",
+  title: "Docu",
+  description: "Professional document management portal",
   icons: {
     icon: [
       { url: "/favicon.ico", sizes: "any" },

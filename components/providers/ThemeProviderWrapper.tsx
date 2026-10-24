@@ -1,11 +1,52 @@
 "use client";
 
-import { useEffect } from "react";
-import { useAppSelector } from "@/store/hooks";
+import { useEffect, useRef } from "react";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { getColorScheme } from "@/config/theme-colors";
+import { authApi } from "@/lib/api/global-http";
+import type { ThemeConfig } from "@/config/theme-config";
+import { hydrateTheme, setMounted } from "@/store/slices/themeSlice";
 
 export function ThemeProviderWrapper({ children }: { children: React.ReactNode }) {
   const { config, mounted } = useAppSelector((state) => state.theme);
+  const { isLoading: isAuthLoading, isAuthenticated, userId } = useAppSelector((state) => state.auth);
+  const dispatch = useAppDispatch();
+  const loadedForUser = useRef<string | null>(null);
+  const savedConfig = useRef<string | null>(null);
+
+  useEffect(() => {
+    if (isAuthLoading) return;
+
+    let cancelled = false;
+    loadedForUser.current = null;
+    savedConfig.current = null;
+    dispatch(setMounted(false));
+
+    if (!isAuthenticated || !userId) {
+      dispatch(setMounted(true));
+      return () => {
+        cancelled = true;
+      };
+    }
+
+    authApi.getInstance()
+      .get<{ content: ThemeConfig }>("/theme")
+      .then(({ data }) => {
+        if (cancelled) return;
+        loadedForUser.current = userId;
+        savedConfig.current = `${userId}:${JSON.stringify(data.content)}`;
+        dispatch(hydrateTheme(data.content));
+      })
+      .catch((error: unknown) => {
+        if (cancelled) return;
+        console.error("Failed to load user theme:", error);
+        dispatch(setMounted(true));
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [dispatch, isAuthLoading, isAuthenticated, userId]);
 
   // Apply theme changes to DOM
   useEffect(() => {

@@ -10,7 +10,7 @@ import { AppSidebar } from "@/components/commonComponents/AppSidebar";
 import { ThemeCustomizer } from "@/components/commonComponents/ThemeCustomizer";
 import { SidebarManager } from "@/components/commonComponents/SidebarManager";
 import { ProfileAvatar } from "@/components/commonComponents/ProfileAvatar";
-import { VendorWorkspaceSelector } from "@/components/commonComponents/VendorWorkspaceSelector";
+import { ClientWorkspaceSelector } from "@/components/commonComponents/ClientWorkspaceSelector";
 import { useAuth } from "@/hooks/useAuth";
 import { Loader } from "@/components/commonComponents/Loader";
 
@@ -54,12 +54,14 @@ export function ConditionalLayout({ children }: ConditionalLayoutProps) {
       <SidebarInset>
         <header className="sticky top-0 z-30 flex h-16 shrink-0 items-center gap-2 border-b bg-background px-4">
           <SidebarTrigger className="-ml-1" />
-          <div className="flex flex-1 items-center justify-between">
+          <div className="flex min-w-0 flex-1 items-center justify-between">
             <div className="flex items-center gap-2"></div>
-            <div className="flex items-center gap-4">
-              <VendorWorkspaceSelector />
-              <div className="h-8 w-px bg-border/90" />
-              <ProfileAvatar />
+            <div className="flex min-w-0 items-center gap-2 sm:gap-4">
+              <ClientWorkspaceSelector />
+              <div className="h-8 w-px shrink-0 bg-border/90" />
+              <div className="shrink-0">
+                <ProfileAvatar />
+              </div>
             </div>
           </div>
         </header>

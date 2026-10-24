@@ -40,6 +40,8 @@ import { FilterProvider } from "./FilterContext";
 // Auth hook
 import { useAuth } from "@/hooks/useAuth";
 
+const EMPTY_ROW_IDS: string[] = [];
+
 export function DataTable<TData, TValue>({
   columns,
   data,
@@ -49,6 +51,7 @@ export function DataTable<TData, TValue>({
   pageSize = 15,
   storageKey,
   toolbarActions,
+  toolbarSearch,
   onFiltersChange,
   onPaginationChange,
   serverSideSort,
@@ -58,7 +61,7 @@ export function DataTable<TData, TValue>({
   onQuickSearchClear,
   enableCrossPageSelection = false,
   getRowId,
-  allRowIds = [],
+  allRowIds = EMPTY_ROW_IDS,
   customActions,
   filterApiFunctions,
   disableFiltering = [],
@@ -220,6 +223,7 @@ export function DataTable<TData, TValue>({
         onSaveFilter={savedFiltersHook.handleSaveFilter}
         activeFilters={activeFilters}
         onClearAllFilters={clearAllFilters}
+        toolbarSearch={toolbarSearch}
         showColumnVisibility={showColumnVisibility}
         columnOrder={columnOrdering.columnOrder}
         onColumnOrderChange={columnOrdering.setColumnOrder}

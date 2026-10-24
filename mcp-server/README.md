@@ -41,7 +41,7 @@ Update theme settings in components.json.
        "shadcn": {
          "command": "npm",
          "args": ["run", "mcp"],
-         "cwd": "/path/to/your/shadcn-client-portal"
+         "cwd": "/path/to/your/docu"
        }
      }
    }

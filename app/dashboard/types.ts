@@ -73,3 +73,13 @@ export interface AppealSavingChart {
   county: AppealSavingChartData[];
   assessor: AppealSavingChartData[];
 }
+
+export interface DashboardData {
+  totalMetrics: Metric[];
+  noticeAndAppealsMetrics: NoticeAndAppealsMetrics[];
+  totalAccountsData: AccountData[];
+  appealsOverview: AppealsOverview;
+  savingsByState: SavingsByState[];
+  bppRenderedValues: BppRenderedValue[];
+  appealSavingChart: AppealSavingChart;
+}

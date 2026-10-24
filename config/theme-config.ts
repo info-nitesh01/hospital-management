@@ -24,7 +24,3 @@ export const defaultThemeConfig: ThemeConfig = {
   fontSize: 1, // Default scale
 };
 
-/**
- * Local storage key for theme persistence
- */
-export const THEME_STORAGE_KEY = 'app-theme-config';
